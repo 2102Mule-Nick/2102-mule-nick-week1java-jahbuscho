@@ -1,6 +1,7 @@
 package com.revature.eval.java.core;
 
 import java.time.temporal.Temporal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,8 +31,20 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String acronym(String phrase) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		String acronym = "";
+		boolean new_word = true;
+		char prev = ' ';
+		for(int i = 0; i < phrase.length(); i++) {
+			if(!Character.isAlphabetic(prev)) {
+				if(Character.isAlphabetic(phrase.charAt(i))) {
+					acronym += Character.toUpperCase(phrase.charAt(i));
+				}
+			}
+			prev = phrase.charAt(i);
+		}
+		//System.out.println(phrase);
+		//System.out.println(acronym);
+		return acronym;
 	}
 
 	/**
@@ -84,18 +97,16 @@ public class EvaluationService {
 		}
 
 		public boolean isEquilateral() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			return sideThree == sideTwo && sideTwo == sideOne;
 		}
 
 		public boolean isIsosceles() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			return sideThree == sideTwo || sideTwo == sideOne || sideThree == sideOne;
 		}
 
 		public boolean isScalene() {
 			// TODO Write an implementation for this method declaration
-			return false;
+			return sideThree != sideTwo && sideTwo != sideOne && sideThree != sideOne;
 		}
 
 	}
@@ -116,8 +127,61 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getScrabbleScore(String string) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		String s = string.toLowerCase();
+		int sum = 0;
+		for(int i = 0; i < s.length(); i++) {
+			sum += scrabbleScoreLetter(s.charAt(i));
+		}
+		return sum;
+	}
+	
+	/**
+	 * Helper function for problem 4.
+	 * Takes in a lowercase letter and returns its value.
+	 * returns 0 if character is not lowercase, or is not a letter
+	 * 
+	 * @param c
+	 * @return
+	 */
+	private int scrabbleScoreLetter(char c) {
+		switch(c) {
+			case 'a':
+			case 'e':
+			case 'i':
+			case 'o':
+			case 'u':
+			case 'l':
+			case 'n':
+			case 'r':
+			case 's':
+			case 't':
+				return 1;
+			case 'd':
+			case 'g':
+				return 2;
+			case 'b':
+			case 'c':
+			case 'm':
+			case 'p':
+				return 3;
+			case 'f':
+			case 'h':
+			case 'v':
+			case 'w':
+			case 'y':
+				return 4;
+			case 'k':
+				return 5;
+			case 'x':
+				return 8;
+			case 'q':
+			case 'z':
+				return 10;
+			default:
+				return 0;
+		}
+				
+			
 	}
 
 	/**
@@ -151,9 +215,29 @@ public class EvaluationService {
 	 * Note: As this exercise only deals with telephone numbers used in
 	 * NANP-countries, only 1 is considered a valid country code.
 	 */
-	public String cleanPhoneNumber(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+	public String cleanPhoneNumber(String string) throws IllegalArgumentException{
+		String result = "";
+		boolean checkCountryCode = true;
+		int digitCount = 0;
+		for(int i = 0; i < string.length(); i++) {
+			if(Character.isDigit(string.charAt(i))) {
+				if(checkCountryCode) {
+					if(string.charAt(i) != '1') {
+						result += string.charAt(i);
+						digitCount++;
+						checkCountryCode = false;
+					}
+				}
+				else {
+					result += string.charAt(i);
+					digitCount++;
+				}
+			}
+		}
+		if(digitCount != 10) {
+			throw new IllegalArgumentException();
+		}
+		return result;
 	}
 
 	/**
@@ -166,8 +250,18 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Map<String, Integer> wordCount(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		String[] words = string.split("\\W+");
+		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		for(String word : words) {
+			if(map.containsKey(word)) {
+				map.put(word, map.get(word) + 1);
+			}
+			else {
+				map.put(word, 1);
+			}
+		}
+		
+		return map;
 	}
 
 	/**
