@@ -303,9 +303,29 @@ public class EvaluationService {
 		private List<T> sortedList;
 
 		public int indexOf(T t) {
-			// TODO Write an implementation for this method declaration
-			return 0;
+//			System.out.println(binarySearch(sortedList, t));
+			return binarySearch(sortedList, t);
 		}
+		
+		private int binarySearch(List<T> list, T target) {
+			int mid = list.size()/2;
+			Comparable<T> t = (Comparable<T>) target;
+//			System.out.println("mid: " + mid);
+//			System.out.println("list[mid]: " + list.get(mid));
+//			System.out.println("t: " + t);
+//			System.out.println("compareTo: " + t.compareTo(list.get(mid)));
+			if(t.compareTo(list.get(mid)) == 0) {
+				return mid;
+			}
+			else if(t.compareTo(list.get(mid)) <= 0) {
+				return binarySearch(list.subList(0, mid), target);
+			}
+			else if(t.compareTo(list.get(mid)) >= 0) {
+				return mid + binarySearch(list.subList(mid, list.size()), target);
+			}
+			return -1;
+		}
+		
 
 		public BinarySearch(List<T> sortedList) {
 			super();
@@ -340,8 +360,56 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String toPigLatin(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		String[] words = string.split(" ");
+		String result = "";
+		for(String word : words) {
+			result += wordToPigLatin(word) + " ";
+		}
+		System.out.println(result.substring(0, result.length()-1));
+		return result.substring(0, result.length()-1);//take substring to remove the extra space at the end
+	}
+	/**
+	 * helper function for problem 8
+	 * @param str
+	 * @return
+	 */
+	private String wordToPigLatin(String str) {
+		String ay = "ay";
+		String pre = "";
+		String meat = str;
+		int firstVowel = 0;
+		for(int i = 0; i < str.length(); i++) {
+			if(isVowel(str.charAt(i))) {
+				firstVowel = i;
+				break;
+			}
+			if(str.charAt(i) == 'q') {
+				if(str.charAt(i+1) == 'u') {
+					if(isVowel(str.charAt(i+2))) {
+						firstVowel = i+2;
+						break;
+					}
+				}
+			}
+		}
+		if(firstVowel > 0) {
+			pre = str.substring(0, firstVowel);
+			meat = str.substring(firstVowel, str.length());
+		}
+		
+		return meat+pre+ay;
+	}
+	private boolean isVowel(char c) {
+		switch(c) {
+			case 'a':
+			case 'e':
+			case 'i':
+			case 'o':
+			case 'u':
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	/**
@@ -360,7 +428,11 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isArmstrongNumber(int input) {
-		// TODO Write an implementation for this method declaration
+		int temp = input;
+		int sum = 0;
+		while(temp > 0) {
+			
+		}
 		return false;
 	}
 
