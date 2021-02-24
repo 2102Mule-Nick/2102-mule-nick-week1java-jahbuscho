@@ -1,6 +1,8 @@
 package com.revature.eval.java.core;
 
 import java.time.temporal.Temporal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +21,7 @@ public class EvaluationService {
 		for (int i = reversed.length - 1, j=0; i >= 0; i--, j++) {
 			reversed[j] = string.charAt(i);
 		}
+//		System.out.println(new String(reversed));
 		return new String(reversed);
 	}
 
@@ -365,7 +368,7 @@ public class EvaluationService {
 		for(String word : words) {
 			result += wordToPigLatin(word) + " ";
 		}
-		System.out.println(result.substring(0, result.length()-1));
+		//System.out.println(result.substring(0, result.length()-1));
 		return result.substring(0, result.length()-1);//take substring to remove the extra space at the end
 	}
 	/**
@@ -430,10 +433,20 @@ public class EvaluationService {
 	public boolean isArmstrongNumber(int input) {
 		int temp = input;
 		int sum = 0;
-		while(temp > 0) {
+		int count = 0;
+		ArrayList<Integer> digits = new ArrayList<Integer>();
+		for(int i = 0; temp > 0; i++) {
 			
+			digits.add(temp%10);
+			temp /= 10;
+			count++;
 		}
-		return false;
+		for(int digit : digits) {
+			sum += Math.pow(digit, count);
+		}
+//		System.out.println("sum: "+sum);
+//		System.out.println("input: "+input);
+		return sum == input;
 	}
 
 	/**
@@ -447,9 +460,82 @@ public class EvaluationService {
 	 * @return
 	 */
 	public List<Long> calculatePrimeFactorsOf(long l) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		List<Long> primeFactors = new ArrayList<Long>();
+		
+		if(updatePrimes(l)) {
+			primeFactors.add(l);
+			System.out.println(primeFactors);
+			return primeFactors;
+		}
+		
+		long temp = l;
+		int primeCursor = 0;
+		while(primeCursor < Primes.size()) {
+			break;
+		}
+		for(int i = 0; i < Primes.size(); i++) {
+			if(temp % Primes.get(i) == 0) {//the prime is a factor of temp
+				primeFactors.add(Primes.get(i));//add the prime to the factors list
+				temp /= Primes.get(i);//divide temp by the prime
+				if(temp == 1) {//if the all factors have been found exit
+					System.out.println(primeFactors);
+					return primeFactors;
+				}
+				i--;//decrement i so we check if we have multiples of the same prime as a factor
+			}
+		}
+		System.out.println(primeFactors);
+		return primeFactors;
 	}
+	/**
+	 * dynamically sized list of prime numbers used by calculatePrimeFactorsOf and updated by updatePrimes 
+	 */
+	private static ArrayList<Long> Primes = new ArrayList<Long>(Arrays.asList(2L));
+	/**
+	 * Helper function for problem 10. Takes in a long and returns true i the long 
+	 * is prime, and false otherwise. It also updates Primes list.
+	 * @param num
+	 * @return
+	 */
+	private static boolean updatePrimes(long num) {
+		
+		for(long prime : Primes) {
+			if(prime == num) {
+				return true;
+			}
+			else if(prime > num) {
+				return false;
+			}
+		}
+		//if you get here, the maximum prime in our list is < num, so we may need to extend our list.
+		long numCursor = Primes.get(Primes.size()-1);
+		boolean isPrime = true;
+		long temp = num;
+		while(numCursor <= num) {
+			numCursor++;
+			isPrime = true;
+			//check if numCursor is divisible by any of the primes
+			for(long prime : Primes) {
+				if(numCursor % prime == 0) {//if it is divisible, mark it as not prime, and break
+					isPrime = false;
+				}
+			}
+			if(isPrime) {
+				Primes.add(numCursor);
+				if(numCursor == num) {
+					return true;
+				}
+				else if(num%numCursor == 0) { //return once we reach the greatest factor
+					if(numCursor > temp/numCursor){
+						return false;
+					}
+					temp /= numCursor;
+				}
+			}
+		}
+		return false;
+	}
+	
 
 	/**
 	 * 11. Create an implementation of the rotational cipher, also sometimes called
