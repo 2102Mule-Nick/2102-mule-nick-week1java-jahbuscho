@@ -667,7 +667,7 @@ public class EvaluationService {
 	 *
 	 */
 	static class AtbashCipher {
-
+		private static final char[] cipherAlpha = {'z','y','x','w','v','u','t','s','r','q','p','o','n','m','l','k','j','i','h','g','f','e','d','c','b','a'};
 		/**
 		 * Question 13
 		 * 
@@ -675,8 +675,25 @@ public class EvaluationService {
 		 * @return
 		 */
 		public static String encode(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			String result = "";
+			int letterCount = 0;
+			for(int i = 0; i < string.length(); i++) {
+				if(Character.isAlphabetic(string.charAt(i))) {
+					result += cipherAlpha[Character.toLowerCase(string.charAt(i)) - 97];
+					letterCount++;
+					if(letterCount % 5 == 0) {
+						result += ' ';
+					}
+				}
+				else if(Character.isDigit(string.charAt(i))) {
+					result += string.charAt(i);
+					letterCount++;
+					if(letterCount % 5 == 0) {
+						result += ' ';
+					}
+				}
+			}
+			return result.trim();
 		}
 
 		/**
@@ -686,8 +703,16 @@ public class EvaluationService {
 		 * @return
 		 */
 		public static String decode(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			String result = "";
+			for(int i = 0; i < string.length(); i++) {
+				if(Character.isAlphabetic(string.charAt(i))) {
+					result += cipherAlpha[Character.toLowerCase(string.charAt(i)) - 97];
+				}
+				else if(Character.isDigit(string.charAt(i))) {
+					result += string.charAt(i);
+				}
+			}
+			return result;
 		}
 	}
 
