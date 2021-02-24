@@ -464,7 +464,7 @@ public class EvaluationService {
 		
 		if(updatePrimes(l)) {
 			primeFactors.add(l);
-			System.out.println(primeFactors);
+//			System.out.println(primeFactors);
 			return primeFactors;
 		}
 		
@@ -478,17 +478,17 @@ public class EvaluationService {
 				primeFactors.add(Primes.get(i));//add the prime to the factors list
 				temp /= Primes.get(i);//divide temp by the prime
 				if(temp == 1) {//if the all factors have been found exit
-					System.out.println(primeFactors);
+//					System.out.println(primeFactors);
 					return primeFactors;
 				}
 				i--;//decrement i so we check if we have multiples of the same prime as a factor
 			}
 		}
-		System.out.println(primeFactors);
+//		System.out.println(primeFactors);
 		return primeFactors;
 	}
 	/**
-	 * dynamically sized list of prime numbers used by calculatePrimeFactorsOf and updated by updatePrimes 
+	 * dynamically sized list of prime numbers used in question 10
 	 */
 	private static ArrayList<Long> Primes = new ArrayList<Long>(Arrays.asList(2L));
 	/**
@@ -565,6 +565,7 @@ public class EvaluationService {
 	 */
 	static class RotationalCipher {
 		private int key;
+		private static final char[] alphabet = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
 
 		public RotationalCipher(int key) {
 			super();
@@ -572,8 +573,24 @@ public class EvaluationService {
 		}
 
 		public String rotate(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			String result = "";
+			for(int i = 0; i < string.length(); i++) {
+				if(Character.isAlphabetic(string.charAt(i))) {
+					//boolean isUpper = false;
+					if(Character.isUpperCase(string.charAt(i))) {
+						//isUpper = true;
+						result += Character.toUpperCase(alphabet[(Character.toLowerCase(string.charAt(i)) - 97 + key)%26]);
+					}
+					else {
+						result += alphabet[(string.charAt(i) - 97 + key)%26];
+					}
+					
+				}
+				else {
+					result += string.charAt(i);
+				}
+			}
+			return result;
 		}
 
 	}
@@ -590,10 +607,40 @@ public class EvaluationService {
 	 * @param i
 	 * @return
 	 */
-	public int calculateNthPrime(int i) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+	public int calculateNthPrime(int i) throws IllegalArgumentException{
+		int primeCount = PrimesInt.size();
+		if(i<1) {
+			throw new IllegalArgumentException();
+		}
+		
+		if(i < PrimesInt.size()) {
+//			System.out.println(PrimesInt.get(i-1));
+			return PrimesInt.get(i-1);
+		}
+		else {
+			int cursor = PrimesInt.get(PrimesInt.size() - 1)+1;
+			while(primeCount < i) {
+				boolean isPrime = true;
+				for(int prime : PrimesInt) {
+					if(cursor % prime == 0) {//if it is divisible, mark it as not prime, and break
+						isPrime = false;
+						break;
+					}
+				}
+				if(isPrime) {
+					PrimesInt.add(cursor);
+					primeCount++;
+				}
+				cursor++;
+			}
+		}
+//		System.out.println(PrimesInt.get(i-1));
+		return PrimesInt.get(i-1);
 	}
+	/**
+	 * dynamically sized list of prime numbers used in question 12
+	 */
+	private static ArrayList<Integer> PrimesInt = new ArrayList<Integer>(Arrays.asList(2));
 
 	/**
 	 * 13 & 14. Create an implementation of the atbash cipher, an ancient encryption
