@@ -1,11 +1,15 @@
 package com.revature.eval.java.core;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
+import java.util.HashSet;
 
 public class EvaluationService {
 
@@ -800,8 +804,29 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isPangram(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		String str = string.toLowerCase();
+		int[] alphaCount = new int[26];
+		
+		//initialize empty array
+		for(int i = 0; i < alphaCount.length; i++) {
+			alphaCount[i] = 0;
+		}
+		
+		//each time an alphabetic character is found, increment the corresponding count.
+		for(int i = 0; i < str.length(); i++){
+			if(Character.isAlphabetic(str.charAt(i))) {
+				alphaCount[str.charAt(i) - 97]++;
+			}
+		}
+		
+		//check that all counts are at least one.
+		for(int count : alphaCount) {
+			if(count <= 0) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 
 	/**
@@ -813,8 +838,11 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Temporal getGigasecondDate(Temporal given) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		// I assume we are given their date of birth
+		if(given instanceof LocalDate) {
+			return ((LocalDate) given).atStartOfDay().plus(1000000000L, ChronoUnit.SECONDS);
+		}
+		return given.plus(1000000000L, ChronoUnit.SECONDS);
 	}
 
 	/**
@@ -831,8 +859,23 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getSumOfMultiples(int i, int[] set) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		
+		HashSet<Integer> multiples = new HashSet<Integer>();
+		int sum = 0;
+		
+		for(int num : set) {
+			for(int nn = 1; nn < i; nn++) {
+				if(nn % num == 0) {
+					multiples.add(nn);
+				}
+			}
+		}
+		
+		for(int multiple : multiples) {
+			sum += multiple;
+		}
+		
+		return sum;
 	}
 
 	/**
@@ -872,8 +915,40 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isLuhnValid(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		ArrayList<Integer> digits = new ArrayList<Integer>();
+		
+		//parse through string and collect all digits. 
+		//Any non-digit characters except a space will render the string invalid.
+		for(int i = 0; i < string.length(); i++) {
+			if(Character.isDigit(string.charAt(i))) {
+				digits.add(string.charAt(i) - 48);
+			}
+			else if(string.charAt(i) != ' ') {
+				return false;
+			}
+		}
+		
+		if(digits.size() > 1) {
+			int sum = 0;
+			for(int i = digits.size() % 2; i < digits.size(); i++) {
+				if(i % 2 != 0) {
+					int doubled = digits.get(i) * 2;
+					if(doubled > 9) {
+						sum += doubled - 9;
+					}
+					else {
+						sum += doubled;
+					}
+				}
+				else {
+					sum += digits.get(i);
+				}
+			}
+			return sum % 10 == 0;
+		}
+		else {
+			return false;
+		}
 	}
 
 	/**
@@ -904,7 +979,41 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int solveWordProblem(String string) {
-		// TODO Write an implementation for this method declaration
+		String[] words = string.substring(0, string.length() - 1).split(" ");
+		int[] numbers = new int[2];
+		
+		int index = 0;
+		for(String word : words) {
+//			System.out.println(word);
+			if(index < 2) {
+				if(word.charAt(0) == '-') {
+					Scanner scan = new Scanner(word.substring(1));
+					numbers[index] = -scan.nextInt();
+					index++;
+					scan.close();
+				}
+				else if(Character.isDigit(word.charAt(0))) {
+					Scanner scan = new Scanner(word);
+					numbers[index] = scan.nextInt();
+					index++;
+					scan.close();
+				}
+			}
+			else {
+				break;
+			}
+		}
+//		System.out.println(numbers[0] + ", " + numbers[1]);
+		switch(words[3]) {
+			case "plus":
+				return numbers[0] + numbers[1];
+			case "minus":
+				return numbers[0] - numbers[1];
+			case "divided":
+				return numbers[0] / numbers[1];
+			case "multiplied":
+				return numbers[0] * numbers[1];
+		}
 		return 0;
 	}
 
