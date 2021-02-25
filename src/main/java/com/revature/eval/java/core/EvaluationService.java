@@ -241,7 +241,7 @@ public class EvaluationService {
 				}
 			}
 		}
-		if(digitCount != 10) {
+		if(digitCount != 10 || result.charAt(3) == '1') {
 			throw new IllegalArgumentException();
 		}
 		return result;
