@@ -739,8 +739,51 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isValidIsbn(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		int[] digits = new int[10];
+		int digitCount = 0;
+		//int i;
+		boolean check = false;
+		boolean checkFound = false;
+		for(int i = 0; digitCount < digits.length && i < string.length(); i++) {
+			if(check){
+				if(Character.isDigit(string.charAt(i))) {
+					digits[digitCount] = string.charAt(i) - 48;
+					digitCount++;
+					checkFound = true;
+				}
+				else if(string.charAt(i) == 'X') {
+					digits[digitCount] = 10;
+					digitCount++;
+					checkFound = true;
+				}
+			}
+			if(digitCount < digits.length-1) {
+				if(Character.isDigit(string.charAt(i))) {
+					digits[digitCount] = string.charAt(i) - 48;
+					digitCount++;
+					
+				}
+			}
+			else {
+				check = true;
+			}
+		}
+		if(digitCount < 10) {
+//			System.out.println(false);
+			return false;
+		}
+		
+		int factor = 10;
+		int sum = 0;
+		for(int digit : digits) {
+//			System.out.print(""+digit+"; ");
+			sum += digit * factor;
+			factor--;
+		}
+//		System.out.println();
+//		System.out.println(sum%11==0);
+		
+		return sum%11==0;
 	}
 
 	/**
